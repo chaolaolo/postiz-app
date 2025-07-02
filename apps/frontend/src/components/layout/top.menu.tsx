@@ -84,6 +84,11 @@ export const useMenuItems = () => {
       path: '/smartcontent',
     },
     {
+      name: t('cobalt', 'Cobalt'),
+      icon: 'cobalt',
+      path: '/cobalt',
+    },
+    {
       name: isGeneral ? t('calendar', 'Calendar') : t('launches', 'Launches'),
       icon: 'launches',
       path: '/launches',
