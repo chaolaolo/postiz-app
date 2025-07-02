@@ -8,7 +8,10 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { withProvider } from '@gitroom/frontend/components/new-launch/providers/high.order.provider';
+import {
+  PostComment,
+  withProvider,
+} from '@gitroom/frontend/components/new-launch/providers/high.order.provider';
 import { TikTokDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/tiktok.dto';
 import { useSettings } from '@gitroom/frontend/components/launches/helpers/use.values';
 import { Select } from '@gitroom/react/form/select';
@@ -343,14 +346,16 @@ const TikTokSettings: FC<{
     </div>
   );
 };
-export default withProvider(
-  TikTokSettings,
-  undefined,
-  TikTokDto,
-  async (items) => {
+export default withProvider({
+  postComment: PostComment.COMMENT,
+  minimumCharacters: [],
+  SettingsComponent: TikTokSettings,
+  CustomPreviewComponent: undefined,
+  dto: TikTokDto,
+  checkValidity: async (items) => {
     const [firstItems] = items;
     if (items.length !== 1) {
-      return 'Tiktok items should be one';
+      return 'Should have one item';
     }
     if (firstItems.length === 0) {
       return 'No video / images selected';
@@ -368,5 +373,5 @@ export default withProvider(
     }
     return true;
   },
-  2000
-);
+  maximumCharacters: 2000,
+});

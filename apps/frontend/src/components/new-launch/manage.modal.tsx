@@ -59,6 +59,8 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
     setTags,
     integrations,
     setSelectedIntegrations,
+    locked,
+    activateExitButton,
   } = useLaunchStore(
     useShallow((state) => ({
       hide: state.hide,
@@ -71,6 +73,8 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
       selectedIntegrations: state.selectedIntegrations,
       integrations: state.integrations,
       setSelectedIntegrations: state.setSelectedIntegrations,
+      locked: state.locked,
+      activateExitButton: state.activateExitButton
     }))
   );
 
@@ -94,6 +98,10 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
   }, [existingData, mutate, modal]);
 
   const askClose = useCallback(async () => {
+    if (!activateExitButton) {
+      return;
+    }
+
     if (
       await deleteDialog(
         t(
@@ -109,7 +117,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
       }
       modal.closeAll();
     }
-  }, []);
+  }, [activateExitButton]);
 
   const changeCustomer = useCallback(
     (customer: string) => {
@@ -136,7 +144,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
         const notEnoughChars = checkAllValid.filter((p: any) => {
           return p.values.some((a: any) => {
             return (
-              countCharacters(a.content, p?.integration?.identifier || '') < 6
+              countCharacters(a.content, p?.integration?.identifier || '') === 0 && a.media?.length === 0
             );
           });
         });
@@ -145,7 +153,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
           toaster.show(
             '' +
             item.integration.name +
-            ' post is too short, it must be at least 6 characters',
+            ' Your post should have at least one character or one image.',
             'warning'
           );
           setLoading(false);
@@ -315,7 +323,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
                       onClick={deletePost}
                       className="rounded-[4px] border-2 border-red-400 text-red-400"
                       secondary={true}
-                      disabled={loading}
+                      disabled={loading || locked}
                     >
                       {t('delete_post', 'Delete Post')}
                     </Button>
@@ -326,7 +334,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
                       onClick={schedule('draft')}
                       className="rounded-[4px] border-2 border-customColor21"
                       secondary={true}
-                      disabled={selectedIntegrations.length === 0 || loading}
+                      disabled={selectedIntegrations.length === 0 || loading || locked}
                     >
                       {t('save_as_draft', 'Save as draft')}
                     </Button>
@@ -335,7 +343,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
                   {addEditSets && (
                     <Button
                       className="rounded-[4px] relative group"
-                      disabled={selectedIntegrations.length === 0 || loading}
+                      disabled={selectedIntegrations.length === 0 || loading || locked}
                       onClick={schedule('draft')}
                     >
                       Save Set
@@ -344,7 +352,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
                   {!addEditSets && (
                     <Button
                       className="rounded-[4px] relative group"
-                      disabled={selectedIntegrations.length === 0 || loading}
+                      disabled={selectedIntegrations.length === 0 || loading || locked}
                     >
                       <div className="flex justify-center items-center gap-[5px] h-full">
                         <div
@@ -377,7 +385,7 @@ export const ManageModal: FC<AddEditModalProps> = (props) => {
                             onClick={schedule('now')}
                             className={clsx(
                               'hidden group-hover:flex hover:flex flex-col justify-center absolute start-0 top-[100%] w-full h-[40px] bg-customColor22 border border-tableBorder',
-                              loading &&
+                              (locked || loading) &&
                               'cursor-not-allowed pointer-events-none opacity-50'
                             )}
                           >
