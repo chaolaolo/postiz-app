@@ -34,6 +34,12 @@ async function bootstrap() {
     })
   );
 
+  app.enableCors({
+    origin: 'http://localhost:4200', // Cho phép frontend truy cập
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  });
+
   app.use(cookieParser());
   app.useGlobalFilters(new SubscriptionExceptionFilter());
   app.useGlobalFilters(new HttpExceptionFilter());

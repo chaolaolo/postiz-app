@@ -11,7 +11,7 @@ node_modules
 
 # history
 .history
-
+apps/backend/undefined/
 
 # IDEs and editors
 /.idea
