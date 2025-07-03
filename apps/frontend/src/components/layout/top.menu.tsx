@@ -89,6 +89,11 @@ export const useMenuItems = () => {
       path: '/cobalt',
     },
     {
+      name: t('Graphite', 'Graphite'),
+      icon: 'graphite',
+      path: '/graphite',
+    },
+    {
       name: isGeneral ? t('calendar', 'Calendar') : t('launches', 'Launches'),
       icon: 'launches',
       path: '/launches',

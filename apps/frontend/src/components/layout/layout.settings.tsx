@@ -169,7 +169,7 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
             </div>
             {/* Fixed Header End */}
             {/* Spacer for fixed header height (nav + Title) */}
-            <div style={{ height: 120 }} />
+            <div style={{ height: 70 }} />
             <div className="flex-1 flex">
               <div className="flex-1 rounded-3xl px-0 py-[17px] flex flex-col">
                 {user.tier === 'FREE' && isGeneral && billingEnabled ? (
